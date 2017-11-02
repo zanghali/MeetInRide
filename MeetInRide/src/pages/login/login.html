@@ -1,21 +1,17 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>Meet In Ride</ion-title>
-  </ion-navbar>
-</ion-header>
-
 <ion-content>
-    <ion-list>
-        <ion-item>
-            <ion-label floating>Username</ion-label>
-            <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label floating>Password</ion-label>
-            <ion-input type="password"></ion-input>
-        </ion-item>
-    </ion-list>
-    <div padding>
-        <button ion-button color="primary" block>Sign In</button>
-    </div>
+  <ion-img width="360" height="269" src="/assets/imgs/logo.png"></ion-img>
+  <ion-list>
+    <ion-item>
+      <ion-label floating>Username</ion-label>
+      <ion-input type="text" [value]="username" [(ngModel)]="username" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Password</ion-label>
+      <ion-input type="password" [value]="password" [(ngModel)]="password" required></ion-input>
+    </ion-item>
+  </ion-list>
+  <div padding>
+    <button ion-button color="primary" (click)='connexion();' block>Log In</button>
+    <button ion-button color="secondary" (click)='signup();' block>Sign Up</button>
+  </div>
 </ion-content>

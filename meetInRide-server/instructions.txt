@@ -1,0 +1,11 @@
+PostgreSql :
+
+CREATE TABLE users (
+    username varchar PRIMARY KEY,
+    email varchar NOT NULL,
+    password varchar NOT NULL,
+    surname varchar NOT NULL,
+    lastname varchar NOT NULL,
+    birthdate date NOT NULL);
+
+INSERT INTO users VALUES ('cpe','ghali.zangui@cpe.fr','cpe','cpe', 'cpe', '1994-01-17');

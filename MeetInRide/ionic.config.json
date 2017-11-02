@@ -1,6 +1,8 @@
 {
-  "name": "io.cordova.myapp63e5ed",
-  "app_id": "",
-  "v2": true,
-  "typescript": true
+  "name": "meetInRide",
+  "app_id": "4fd8cec8",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
 }
