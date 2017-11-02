@@ -30,7 +30,7 @@ export class LoginPage {
         console.log(data['_body'].length);
 
         if (data['_body'] != "[]")
-          this.navCtrl.setRoot(HomePage); // OK
+          this.navCtrl.setRoot(HomePage, {username: this.username}); // OK
         else {
           let alert = this.alertCtrl.create({
             title: "Authentication Error",

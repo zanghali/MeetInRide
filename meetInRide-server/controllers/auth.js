@@ -3,11 +3,13 @@ const connectionString = 'postgresql://postgres:Ghali01710721@localhost:5432/mee
 
 module.exports = {
 
-    isAuthenticated: function (request, response, next) {
+    isAuthenticated: function (request, response) {
         var result = false;
 
-        if (request.session.user_id != "")
+        if (request.session.user_id != undefined)
             result = true;
+
+        console.log("(isAuth) user_id: " + request.session.user_id);
 
         return result;
     },

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
-import { Auth, User, UserDetails, IDetailedError } from '@ionic/cloud-angular';
+import { Auth, User } from '@ionic/cloud-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 
 import { LoginPage } from '../login/login';

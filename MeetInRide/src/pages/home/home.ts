@@ -1,7 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { IonicPage, NavController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { ConnectivityServiceProvider } from '../../providers/connectivity-service/connectivity-service';
 import { Geolocation } from 'ionic-native';
+import { ServerProvider } from '../../providers/server/server';
 
 import { LoginPage } from '../login/login';
 
@@ -12,6 +13,7 @@ declare var google;
   templateUrl: 'home.html'
 })
 export class HomePage {
+  public username;
 
   @ViewChild('map') mapElement: ElementRef;
 
@@ -19,13 +21,16 @@ export class HomePage {
   mapInitialised: boolean = false;
   apiKey: any;
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public connectivityService: ConnectivityServiceProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public connectivityService: ConnectivityServiceProvider, public server: ServerProvider) {
+    this.username = navParams.get("username");
+
+    this.trackPosition();
     this.loadGoogleMaps();
   }
 
   myProfile() {
     const alert = this.alertCtrl.create({
-      title: 'Profile',
+      title: 'Profile : ' + this.username,
       inputs: [
         // {
         //   name: 'username',
@@ -48,12 +53,24 @@ export class HomePage {
         {
           text: 'Log Out',
           handler: data => {
+            this.server.logout();
             this.navCtrl.setRoot(LoginPage);
           }
         }
       ]
     });
     alert.present();
+  }
+
+  trackPosition() {
+    const subscription = Geolocation.watchPosition()
+      .filter((p) => p.coords !== undefined) //Filter Out Errors
+      .subscribe(position => {
+        this.server.updatePosition(this.username, position.coords.latitude, position.coords.longitude)
+      });
+
+    // To stop notifications
+    // subscription.unsubscribe();
   }
 
   loadGoogleMaps() {
@@ -111,9 +128,18 @@ export class HomePage {
 
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
-      var marker = new google.maps.Marker({
-        position: latLng,
-        map: this.map
+      this.server.getPositions((positions) => {
+        positions.forEach(element => {
+          console.log(element.username);
+
+          let pos = new google.maps.LatLng(element.latitude, element.longitude);
+
+          var marker = new google.maps.Marker({
+            position: pos,
+            title: element.username,
+            map: this.map
+          });
+        });
       });
     });
   }
