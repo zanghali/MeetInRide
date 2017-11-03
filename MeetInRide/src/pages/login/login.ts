@@ -25,7 +25,7 @@ export class LoginPage {
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });
 
-    this.http.post("http://localhost:3000/login", details, options)
+    this.http.post("http://ghalizangui.ddns.net:3000/login", details, options)
       .subscribe(data => {
         console.log(data['_body'].length);
 

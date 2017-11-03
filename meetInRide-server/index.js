@@ -9,19 +9,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({secret: 'APP-SECRET', cookie: {httpOnly: true, secure: true}}))
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 
+// Authentication
+
 app.get('/auth', function (request, response) {
-    var result = false;
-
-    if (auth.isAuthenticated(request, response))
-        result = true;
-
+    var result = auth.isAuthenticated(request, response);
     response.send(result);
 });
 
@@ -29,7 +27,6 @@ app.post('/login', function (request, response) {
     auth.findUser(request.body, (result) => {
         request.session.user_id = request.body.username;
         console.log("(login) user_id: " + request.session.user_id);
-
         response.send(result);
     })
 });
@@ -44,6 +41,8 @@ app.post('/signup', function (request, response) {
         response.send(result);
     })
 });
+
+// Geolocation
 
 app.post('/updatePosition', function (request, response) {
     position.updatePosition(request.body, (result) => {

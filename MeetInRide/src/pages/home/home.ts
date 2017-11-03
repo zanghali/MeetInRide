@@ -14,6 +14,8 @@ declare var google;
 })
 export class HomePage {
   public username;
+  public watchPos;
+  public userMarkers;
 
   @ViewChild('map') mapElement: ElementRef;
 
@@ -23,6 +25,7 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public connectivityService: ConnectivityServiceProvider, public server: ServerProvider) {
     this.username = navParams.get("username");
+    this.userMarkers = [];
 
     this.trackPosition();
     this.loadGoogleMaps();
@@ -53,6 +56,7 @@ export class HomePage {
         {
           text: 'Log Out',
           handler: data => {
+            this.watchPos.unsubscribe();
             this.server.logout();
             this.navCtrl.setRoot(LoginPage);
           }
@@ -63,14 +67,34 @@ export class HomePage {
   }
 
   trackPosition() {
-    const subscription = Geolocation.watchPosition()
-      .filter((p) => p.coords !== undefined) //Filter Out Errors
+    this.watchPos = Geolocation.watchPosition()
+      .filter((p) => p.coords !== undefined)
       .subscribe(position => {
         this.server.updatePosition(this.username, position.coords.latitude, position.coords.longitude)
-      });
 
-    // To stop notifications
-    // subscription.unsubscribe();
+        this.server.getPositions((positions) => {
+          this.clearPositions();
+
+          positions.forEach(element => {
+            let pos = new google.maps.LatLng(element.latitude, element.longitude);
+
+            var marker = new google.maps.Marker({
+              position: pos,
+              title: element.username,
+              animation: (element.username == this.username) ? google.maps.Animation.BOUNCE : '',
+              map: this.map
+            });
+            this.userMarkers.push(marker);
+          });
+        });
+      });
+  }
+
+  clearPositions() {
+    for (var i = 0; i < this.userMarkers.length; i++) {
+      this.userMarkers[i].setMap(null);
+    }
+    this.userMarkers = [];
   }
 
   loadGoogleMaps() {
@@ -119,28 +143,152 @@ export class HomePage {
 
     Geolocation.getCurrentPosition().then((position) => {
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
+      var style = [
+        {
+          "featureType": "landscape.man_made",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#f7f1df"
+            }
+          ]
+        },
+        {
+          "featureType": "landscape.natural",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#d0e3b4"
+            }
+          ]
+        },
+        {
+          "featureType": "landscape.natural.terrain",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "poi",
+          "elementType": "labels",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.business",
+          "elementType": "all",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.medical",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#fbd3da"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#bde6ab"
+            }
+          ]
+        },
+        {
+          "featureType": "road",
+          "elementType": "geometry.stroke",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "road",
+          "elementType": "labels",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "road.highway",
+          "elementType": "geometry.fill",
+          "stylers": [
+            {
+              "color": "#ffe15f"
+            }
+          ]
+        },
+        {
+          "featureType": "road.highway",
+          "elementType": "geometry.stroke",
+          "stylers": [
+            {
+              "color": "#efd151"
+            }
+          ]
+        },
+        {
+          "featureType": "road.arterial",
+          "elementType": "geometry.fill",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "featureType": "road.local",
+          "elementType": "geometry.fill",
+          "stylers": [
+            {
+              "color": "black"
+            }
+          ]
+        },
+        {
+          "featureType": "transit.station.airport",
+          "elementType": "geometry.fill",
+          "stylers": [
+            {
+              "color": "#cfb2db"
+            }
+          ]
+        },
+        {
+          "featureType": "water",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#a2daf2"
+            }
+          ]
+        }
+      ]
       let mapOptions = {
         center: latLng,
         zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        styles: style,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        disableDefaultUI: true
       }
 
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-
-      this.server.getPositions((positions) => {
-        positions.forEach(element => {
-          console.log(element.username);
-
-          let pos = new google.maps.LatLng(element.latitude, element.longitude);
-
-          var marker = new google.maps.Marker({
-            position: pos,
-            title: element.username,
-            map: this.map
-          });
-        });
-      });
     });
   }
 

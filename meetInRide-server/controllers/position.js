@@ -9,7 +9,7 @@ module.exports = {
         })
 
         pool.connect(function (err, client, done) {
-            let query = "UPDATE positions SET latitude = $2 , longitude = $3 WHERE username = $1";
+            let query = "INSERT INTO positions VALUES (LOWER($1), $2, $3) ON CONFLICT (username) DO UPDATE SET latitude = $2, longitude = $3";
             let userdetails = [data.username, data.latitude, data.longitude];
 
             client.query(query, userdetails, function (err, result) {
