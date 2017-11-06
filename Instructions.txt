@@ -1,0 +1,56 @@
+
+=====================================================================
+			NodeJs Setup
+=====================================================================
+
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo apt-get install -y build-essential
+
+=====================================================================
+			PostgreSql Setup
+=====================================================================
+
+sudo apt-get install postgresql postgresql-contrib
+sudo passwd postgres
+su - postgres
+psql -d template1 -c "ALTER USER postgres WITH PASSWORD 'cpe';"
+createdb meetinride
+psql meetinride
+
+CREATE TABLE users (
+    username varchar PRIMARY KEY,
+    email varchar NOT NULL,
+    password varchar NOT NULL,
+    surname varchar NOT NULL,
+    lastname varchar NOT NULL,
+    birthate timestamp NOT NULL
+);
+
+CREATE TABLE positions (
+    username varchar PRIMARY KEY,
+    latitude varchar,
+    longitude varchar
+);
+
+CREATE TABLE matchs (
+    match_id serial PRIMARY KEY,
+    first_username varchar NOT NULL,
+    second_username varchar NOT NULL,
+    date timestamp NOT NULL
+);
+
+create unique index idx_username on matchs (first_username,second_username)
+
+
+=====================================================================
+			Git Setup
+=====================================================================
+
+mkdir /var/ws
+cd /var/ws
+
+sudo apt install git
+ssh-keygen
+git clone git@github.com:zanghali/MeetInRide.git meetinride
+git fetch origin

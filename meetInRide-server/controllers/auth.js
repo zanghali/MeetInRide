@@ -37,7 +37,7 @@ module.exports = {
         })
 
         pool.connect(function (err, client, done) {
-            let query = "INSERT INTO users (LOWER(username),email,password,surname,lastname,birthdate) VALUES ($1,$2,$3,$4,$5,$6);";
+            let query = "INSERT INTO users (username,email,password,surname,lastname,birthdate) VALUES (LOWER($1),$2,$3,$4,$5,$6);";
             let userdetails = [data.username, data.email, data.password, data.surname, data.lastname, data.birthdate];
 
             client.query(query, userdetails, function (err, result) {

@@ -1,11 +1,9 @@
 page-home {
 
-    .scroll-content {
-        height: 100%
-      }
-   
-      #map {
-        width: 100%;
-        height: 100%;
-      }
+  ion-tabs {
+    background-image: url('../assets/imgs/bg.jpg');
+    background-size: cover;
+    background-position-x: 50%;
+  }
+
 }

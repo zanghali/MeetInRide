@@ -16,6 +16,7 @@ export class MyApp {
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, server: ServerProvider) {
     platform.ready().then(() => {
       statusBar.styleDefault();
+      statusBar.hide();
       splashScreen.hide();
 
       if(server.isAuthenticated()) {

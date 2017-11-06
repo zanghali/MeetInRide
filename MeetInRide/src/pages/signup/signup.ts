@@ -38,7 +38,7 @@ export class SignupPage {
       headers.append('Content-Type', 'application/json');
       let options = new RequestOptions({ headers: headers });
 
-      this.http.post("http://ghalizangui.ddns.net:3000/signup", details, options)
+      this.http.post("http://meetinride.ddns.net:3000/signup", details, options)
         .subscribe(data => {
           if (data['_body'] == 'true'){
             let alert = this.alertCtrl.create({

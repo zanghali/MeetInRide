@@ -1,14 +1,5 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>Meet In Ride</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="myProfile()">
-        <ion-icon name="contact"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
-</ion-header>
-
-<ion-content>
-  <div #map id="map"></div>
-</ion-content>
+<ion-tabs selectedIndex="1">
+  <ion-tab [root]="tab1Root" tabIcon="contact"></ion-tab>
+  <ion-tab [root]="tab2Root" [rootParams]="mapParam" tabIcon="map"></ion-tab>
+  <ion-tab [root]="tab3Root" tabIcon="chatbubbles"></ion-tab>
+</ion-tabs>

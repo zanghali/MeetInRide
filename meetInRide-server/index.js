@@ -2,8 +2,10 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var session = require('express-session');
+
 var auth = require('./controllers/auth');
 var position = require('./controllers/position');
+var match = require('./controllers/match');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -42,7 +44,7 @@ app.post('/signup', function (request, response) {
     })
 });
 
-// Geolocation
+// Position
 
 app.post('/updatePosition', function (request, response) {
     position.updatePosition(request.body, (result) => {
@@ -52,6 +54,20 @@ app.post('/updatePosition', function (request, response) {
 
 app.get('/getPositions', function (request, response) {
     position.getPositions(request.body, (result) => {
+        response.send(result);
+    })
+});
+
+// Match
+
+app.post('/addMatch', function (request, response) {
+    match.addMatch(request.body, (result) => {
+        response.send(result);
+    })
+});
+
+app.post('/getMatchsByUsername', function (request, response) {
+    match.getMatchsByUsername(request.body, (result) => {
         response.send(result);
     })
 });
