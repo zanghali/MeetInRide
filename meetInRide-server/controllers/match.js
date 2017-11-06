@@ -1,5 +1,5 @@
 const { Pool, Client } = require('pg')
-const connectionString = 'postgresql://postgres:Ghali01710721@localhost:5432/meetinride'
+const connectionString = 'postgresql://postgres:cpe@localhost:5432/meetinride'
 
 module.exports = {
 
