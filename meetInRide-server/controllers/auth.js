@@ -1,5 +1,6 @@
 const { Pool, Client } = require('pg')
 const connectionString = 'postgresql://postgres:cpe@localhost:5432/meetinride'
+var md5 = require('md5');
 
 module.exports = {
 
@@ -21,7 +22,7 @@ module.exports = {
 
         pool.connect(function (err, client, done) {
             let query = "SELECT * FROM users WHERE LOWER(username) = LOWER($1) AND LOWER(password) = LOWER($2)";
-            let userdetails = [data.username, data.password];
+            let userdetails = [data.username, md5(data.password + md5(data.username))];
 
             client.query(query, userdetails, function (err, result) {
                 done();
@@ -34,11 +35,12 @@ module.exports = {
     registerUser: function (data, callback) {
         const pool = new Pool({
             connectionString: connectionString,
-        })
+        })        
 
         pool.connect(function (err, client, done) {
             let query = "INSERT INTO users (username,email,password,surname,lastname,birthdate) VALUES (LOWER($1),$2,$3,$4,$5,$6);";
-            let userdetails = [data.username, data.email, data.password, data.surname, data.lastname, data.birthdate];
+            let password = md5(data.password + md5(data.username));
+            let userdetails = [data.username, data.email, password, data.surname, data.lastname, data.birthdate];
 
             client.query(query, userdetails, function (err, result) {
                 done();

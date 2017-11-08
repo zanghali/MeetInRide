@@ -48,7 +48,7 @@ export class MapPage {
             let pos = new google.maps.LatLng(element.latitude, element.longitude);
             var animation;
             var icon;
-            
+
             if (element.username == this.username) {
               animation = google.maps.Animation.BOUNCE;
               icon = 'assets/imgs/male.png';
@@ -67,19 +67,22 @@ export class MapPage {
             });
             this.userMarkers.push(marker);
 
-            let that = this;
-
-            google.maps.event.addListener(marker, 'click', function (event) {
-              let pageDetails = that.modalCtrl.create(UserModalPage, {username:that.username, matchname:element.username});
-              pageDetails.present();
-            });
-
             if (element.username == this.username)
               this.circle.setCenter(pos);
+            else {
+              let that = this;
+
+              google.maps.event.addListener(marker, 'click', function (event) {
+                that.map.setCenter(pos);
+
+                let pageDetails = that.modalCtrl.create(UserModalPage, { username: that.username, matchname: element.username });
+                pageDetails.present();
+              });
+            }
           });
         });
       });
-      this.data.watchPos = this.watchPos;
+    this.data.watchPos = this.watchPos;
   }
 
   clearPositions() {
@@ -135,143 +138,8 @@ export class MapPage {
 
     Geolocation.getCurrentPosition().then((position) => {
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      var style = [
-        {
-          "featureType": "landscape.man_made",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#f7f1df"
-            }
-          ]
-        },
-        {
-          "featureType": "landscape.natural",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#d0e3b4"
-            }
-          ]
-        },
-        {
-          "featureType": "landscape.natural.terrain",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "poi",
-          "elementType": "labels",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "poi.business",
-          "elementType": "all",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "poi.medical",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#fbd3da"
-            }
-          ]
-        },
-        {
-          "featureType": "poi.park",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#bde6ab"
-            }
-          ]
-        },
-        {
-          "featureType": "road",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "road",
-          "elementType": "labels",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "road.highway",
-          "elementType": "geometry.fill",
-          "stylers": [
-            {
-              "color": "#ffe15f"
-            }
-          ]
-        },
-        {
-          "featureType": "road.highway",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#efd151"
-            }
-          ]
-        },
-        {
-          "featureType": "road.arterial",
-          "elementType": "geometry.fill",
-          "stylers": [
-            {
-              "color": "#ffffff"
-            }
-          ]
-        },
-        {
-          "featureType": "road.local",
-          "elementType": "geometry.fill",
-          "stylers": [
-            {
-              "color": "black"
-            }
-          ]
-        },
-        {
-          "featureType": "transit.station.airport",
-          "elementType": "geometry.fill",
-          "stylers": [
-            {
-              "color": "#cfb2db"
-            }
-          ]
-        },
-        {
-          "featureType": "water",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#a2daf2"
-            }
-          ]
-        }
-      ]
+      var style = this.data.mapStyle;
+      
       let mapOptions = {
         center: latLng,
         zoom: 16,
