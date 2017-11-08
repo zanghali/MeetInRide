@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Auth, User } from '@ionic/cloud-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { ServerProvider } from '../../providers/server/server';
 
 import { LoginPage } from '../login/login';
 
@@ -18,29 +19,32 @@ export class SignupPage {
   surname: string;
   lastname: string;
   birthdate: string;
-  
-  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: Auth, public user: User, public alertCtrl: AlertController, public http: Http) {
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: Auth, public server: ServerProvider, public user: User, public alertCtrl: AlertController, public http: Http) {
   }
 
   register() {
-    if (this.password == this.confirmpassword) {
+    if ((this.password).toLowerCase() == (this.confirmpassword).toLowerCase()) {
       let details = {
         'username': this.username,
         'email': this.email,
-        'password': this.password,
+        'password': (this.password).toLowerCase(),
         'surname': this.surname,
         'lastname': this.lastname,
         'birthdate': this.birthdate
       };
 
-      var headers = new Headers();
-      headers.append("Accept", 'application/json');
-      headers.append('Content-Type', 'application/json');
-      let options = new RequestOptions({ headers: headers });
-
-      this.http.post("http://meetinride.ddns.net:3000/signup", details, options)
-        .subscribe(data => {
-          if (data['_body'] == 'true'){
+      this.server.signup(details, (error, data) => {
+        if (error) {
+          let alert = this.alertCtrl.create({
+            title: "Sign Up Error",
+            subTitle: error,
+            buttons: ['OK']
+          });
+          alert.present();
+        }
+        else {
+          if (data['_body'] == 'true') {
             let alert = this.alertCtrl.create({
               title: "Sign Up Succeeded",
               subTitle: 'You can now log in !',
@@ -50,14 +54,8 @@ export class SignupPage {
 
             this.navCtrl.setRoot(LoginPage); // OK
           }
-        }, error => {
-          let alert = this.alertCtrl.create({
-            title: "Sign Up Error",
-            subTitle: error,
-            buttons: ['OK']
-          });
-          alert.present();
-        });
+        }
+      });
     }
     else {
       let alert = this.alertCtrl.create({

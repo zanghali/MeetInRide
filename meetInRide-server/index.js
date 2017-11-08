@@ -6,6 +6,7 @@ var session = require('express-session');
 var auth = require('./controllers/auth');
 var position = require('./controllers/position');
 var match = require('./controllers/match');
+// var helmet = require('helmet') // TODO
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -17,6 +18,7 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
+// app.use(helmet()) // TODO
 
 // Authentication
 

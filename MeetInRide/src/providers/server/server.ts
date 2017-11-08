@@ -17,10 +17,40 @@ export class ServerProvider {
     });
   }
 
+  login(username, password, callback) {
+    let details = { 'username': username, 'password': password };
+
+    var headers = new Headers();
+    headers.append("Accept", 'application/json');
+    headers.append('Content-Type', 'application/json');
+    let options = new RequestOptions({ headers: headers });
+
+    this.http.post("http://meetinride.ddns.net:3000/login", details, options)
+      .subscribe(data => {
+        callback(null, data);
+      }, error => {
+        callback(error, null);
+      });
+  }
+
   logout() {
     this.http.get('http://meetinride.ddns.net:3000/logout').map(res => res.json()).subscribe(data => {
       console.log("logout: " + data);
     });
+  }
+
+  signup(details, callback) {
+    var headers = new Headers();
+    headers.append("Accept", 'application/json');
+    headers.append('Content-Type', 'application/json');
+    let options = new RequestOptions({ headers: headers });
+
+    this.http.post("http://meetinride.ddns.net:3000/signup", details, options)
+      .subscribe(data => {
+        callback(null, data);
+      }, error => {
+        callback(error, null);
+      });
   }
 
   // Position
