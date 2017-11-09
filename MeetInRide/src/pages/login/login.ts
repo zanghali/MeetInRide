@@ -19,7 +19,7 @@ export class LoginPage {
   }
 
   connexion() {
-    this.server.login(this.username, (this.password).toLowerCase(), (error, data) => {
+    this.server.login(this.username, this.password, (error, data) => {
       if (error) {
         let alert = this.alertCtrl.create({
           title: "Authentication Error",

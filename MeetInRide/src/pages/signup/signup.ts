@@ -24,11 +24,11 @@ export class SignupPage {
   }
 
   register() {
-    if ((this.password).toLowerCase() == (this.confirmpassword).toLowerCase()) {
+    if (this.password == this.confirmpassword) {
       let details = {
         'username': this.username,
         'email': this.email,
-        'password': (this.password).toLowerCase(),
+        'password': this.password,
         'surname': this.surname,
         'lastname': this.lastname,
         'birthdate': this.birthdate
