@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "forever start index.js",
+    "start": "forever start -o out.log -e err.log index.js",
     "stop": "forever stop index.js"
   },
   "author": "",
