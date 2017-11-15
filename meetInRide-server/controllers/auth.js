@@ -5,6 +5,13 @@ var jwt = require('jsonwebtoken');
 
 module.exports = {
 
+    isAuth: function (request, response, next) {
+        module.exports.isAuthenticated(request, response, (result) => {
+            if (result.length > 0)
+                next();
+        });
+    },
+
     isAuthenticated: function (request, response, callback) {
         const pool = new Pool({
             connectionString: config.connectionString,
@@ -17,7 +24,6 @@ module.exports = {
             client.query(query, userdetails, function (err, res) {
                 done();
 
-		console.log(res.rows);
                 callback(res.rows);
             });
         })
@@ -40,6 +46,23 @@ module.exports = {
 
                 done();
                 callback(result);
+            });
+        })
+        pool.end()
+    },
+
+    logOut: function (data, callback) {
+        const pool = new Pool({
+            connectionString: config.connectionString,
+        })
+
+        pool.connect(function (err, client, done) {
+            let query = "UPDATE users SET token = NULL WHERE username = LOWER($1)";
+            let userdetails = [data.username];
+
+            client.query(query, userdetails, function (err, res) {
+                done();
+                callback(true);
             });
         })
         pool.end()

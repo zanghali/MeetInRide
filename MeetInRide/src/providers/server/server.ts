@@ -9,23 +9,31 @@ export class ServerProvider {
   constructor(public http: Http) {
   }
 
+  prepareHeaders(withToken) {
+    let headers = new Headers();
+  
+    headers.append("Accept", 'application/json');
+    headers.append('Content-Type', 'application/json');  
+
+    if (withToken)
+      headers.append("Authorization", localStorage.getItem("token"));
+
+    return new RequestOptions({ headers: headers });
+  }
+
   // Authentication
 
-  isAuthenticated() {
-    this.http.get(this.SERVER_URL + 'auth').map(res => res.json()).subscribe(data => {
-      console.log("isAuth: " + data);
-      return data;
+  isAuthenticated(callback) {
+    let options = this.prepareHeaders(true);
+
+    this.http.get(this.SERVER_URL + 'auth', options).map(res => res.json()).subscribe(data => {
+      callback(data);
     });
   }
 
   login(username, password, callback) {
     let details = { 'username': username, 'password': password };
-
-    var headers = new Headers();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
-    headers.append('Token', localStorage.getItem("token"));
-    let options = new RequestOptions({ headers: headers });
+    let options = this.prepareHeaders(true);
 
     this.http.post(this.SERVER_URL + "login", details, options)
       .subscribe(data => {
@@ -35,17 +43,18 @@ export class ServerProvider {
       });
   }
 
-  logout() {
-    this.http.get(this.SERVER_URL + 'logout').map(res => res.json()).subscribe(data => {
-      console.log("logout: " + data);
-    });
+  logout(username) {
+    let details = { 'username': username };
+    let options = this.prepareHeaders(false);
+
+    this.http.post(this.SERVER_URL + "logout", details, options)
+      .subscribe(data => {
+        console.log("logout: " + data);
+      });
   }
 
   signup(details, callback) {
-    var headers = new Headers();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
-    let options = new RequestOptions({ headers: headers });
+    let options = this.prepareHeaders(false);
 
     this.http.post(this.SERVER_URL + "signup", details, options)
       .subscribe(data => {
@@ -59,11 +68,7 @@ export class ServerProvider {
 
   updatePosition(username, latitude, longitude) {
     let details = { 'username': username, 'latitude': latitude, 'longitude': longitude };
-
-    var headers = new Headers();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
-    let options = new RequestOptions({ headers: headers });
+    let options = this.prepareHeaders(true);
 
     this.http.post(this.SERVER_URL + "updatePosition", details, options)
       .subscribe(data => {
@@ -72,7 +77,9 @@ export class ServerProvider {
   }
 
   getPositions(callback) {
-    this.http.get(this.SERVER_URL + 'getPositions').map(res => res.json()).subscribe(data => {
+    let options = this.prepareHeaders(true);
+
+    this.http.get(this.SERVER_URL + 'getPositions', options).map(res => res.json()).subscribe(data => {
       callback(data);
     });
   }
@@ -81,11 +88,7 @@ export class ServerProvider {
 
   addMatch(first_username, second_username) {
     let details = { 'first_username': first_username, 'second_username': second_username };
-
-    var headers = new Headers();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
-    let options = new RequestOptions({ headers: headers });
+    let options = this.prepareHeaders(true);
 
     this.http.post(this.SERVER_URL + "addMatch", details, options)
       .subscribe(data => {
@@ -95,11 +98,7 @@ export class ServerProvider {
 
   getMatchsByUsername(username, callback) {
     let details = { 'username': username };
-
-    var headers = new Headers();
-    headers.append("Accept", 'application/json');
-    headers.append('Content-Type', 'application/json');
-    let options = new RequestOptions({ headers: headers });
+    let options = this.prepareHeaders(true);
 
     this.http.post(this.SERVER_URL + "getMatchsByUsername", details, options)
       .subscribe(data => {

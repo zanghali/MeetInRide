@@ -26,7 +26,7 @@ export class MapPage {
   apiKey: any;
 
   constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public connectivityService: ConnectivityServiceProvider, public server: ServerProvider, public data: DataProvider) {
-    this.username = (navParams.get("username")).toLowerCase();
+    this.username = this.data.username;
     this.userMarkers = [];
 
     this.data.username = this.username;

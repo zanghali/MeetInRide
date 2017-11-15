@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, AlertController } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { ServerProvider } from '../../providers/server/server';
+import { DataProvider } from '../../providers/data/data';
 
 import { HomePage } from '../home/home';
 import { SignupPage } from '../signup/signup';
@@ -15,7 +16,7 @@ export class LoginPage {
   username: string;
   password: string;
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public server: ServerProvider, public http: Http) {
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public server: ServerProvider, public data: DataProvider, public http: Http) {
   }
 
   connexion() {
@@ -30,8 +31,9 @@ export class LoginPage {
       }
       else {
         if (data['_body'] != ""){
-          localStorage.setItem("token", data['_body']);
-          this.navCtrl.setRoot(HomePage, { username: this.username }); // OK
+          localStorage.setItem("token", data['_body']);          
+          this.data.username = this.username.toLowerCase();
+          this.navCtrl.setRoot(HomePage);
         }
         else {
           let alert = this.alertCtrl.create({

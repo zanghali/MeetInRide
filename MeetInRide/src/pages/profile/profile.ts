@@ -25,7 +25,7 @@ export class ProfilePage {
 
   logout() {
     this.watchPos.unsubscribe();
-    this.server.logout();
+    this.server.logout(this.username);
     localStorage.clear();
     this.app.getRootNav().setRoot(LoginPage);
   }

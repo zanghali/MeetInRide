@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Token');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,authorization');
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
@@ -27,14 +27,15 @@ app.get('/auth', function (request, response) {
 });
 
 app.post('/login', function (request, response) {
-    auth.logUser(request.body, request.headers.token, (result) => {
+    auth.logUser(request.body, request.headers.authorization, (result) => {
         response.send(result);
     })
 });
 
-app.get('/logout', auth.isAuthenticated, function (request, response) {
-    // request.session.destroy();
-    response.send("destroyed");
+app.get('/logout', auth.isAuth, function (request, response) {
+    auth.logOut(request.body, (result) => {
+        response.send("destroyed");
+    })
 });
 
 app.post('/signup', function (request, response) {
@@ -45,13 +46,13 @@ app.post('/signup', function (request, response) {
 
 // Position
 
-app.post('/updatePosition', function (request, response) {
+app.post('/updatePosition', auth.isAuth, function (request, response) {
     position.updatePosition(request.body, (result) => {
         response.send(result);
     })
 });
 
-app.get('/getPositions', function (request, response) {
+app.get('/getPositions', auth.isAuth, function (request, response) {
     position.getPositions(request.body, (result) => {
         response.send(result);
     })
@@ -59,13 +60,13 @@ app.get('/getPositions', function (request, response) {
 
 // Match
 
-app.post('/addMatch', function (request, response) {
+app.post('/addMatch', auth.isAuth, function (request, response) {
     match.addMatch(request.body, (result) => {
         response.send(result);
     })
 });
 
-app.post('/getMatchsByUsername', function (request, response) {
+app.post('/getMatchsByUsername', auth.isAuth, function (request, response) {
     match.getMatchsByUsername(request.body, (result) => {
         response.send(result);
     })

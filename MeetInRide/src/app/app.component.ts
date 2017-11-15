@@ -6,24 +6,28 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { ServerProvider } from '../providers/server/server';
+import { DataProvider } from '../providers/data/data';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = LoginPage;
+  rootPage: any = LoginPage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, server: ServerProvider) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, server: ServerProvider, public data: DataProvider) {
     platform.ready().then(() => {
       statusBar.styleDefault();
       statusBar.hide();
       splashScreen.hide();
 
-      if(server.isAuthenticated()) {
-        this.rootPage = HomePage;
-      } else {
-        this.rootPage = LoginPage;
-      }
+      server.isAuthenticated((data) => {
+        if (data != ''){
+          this.data.username = data[0].username;
+          this.rootPage = HomePage;
+        }
+        else
+          this.rootPage = LoginPage;
+      });
     });
   }
 }
