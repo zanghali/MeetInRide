@@ -11,12 +11,14 @@ module.exports = {
         })
 
         pool.connect(function (err, client, done) {
-            let query = "SELECT * FROM users WHERE token == $1";
-            let userdetails = [request.headers.token];
+            let query = "SELECT username FROM users WHERE token = $1";
+            let userdetails = [request.headers.authorization];
 
             client.query(query, userdetails, function (err, res) {
                 done();
-                callback(res.rowCount > 0);
+
+		console.log(res.rows);
+                callback(res.rows);
             });
         })
         pool.end()
