@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ServerProvider {
+  private SERVER_URL = "http://meetinride.ddns.net:3000/";
 
   constructor(public http: Http) {
   }
@@ -11,7 +12,7 @@ export class ServerProvider {
   // Authentication
 
   isAuthenticated() {
-    this.http.get('http://meetinride.ddns.net:3000/auth').map(res => res.json()).subscribe(data => {
+    this.http.get(this.SERVER_URL + 'auth').map(res => res.json()).subscribe(data => {
       console.log("isAuth: " + data);
       return data;
     });
@@ -23,9 +24,10 @@ export class ServerProvider {
     var headers = new Headers();
     headers.append("Accept", 'application/json');
     headers.append('Content-Type', 'application/json');
+    headers.append('Token', localStorage.getItem("token"));
     let options = new RequestOptions({ headers: headers });
 
-    this.http.post("http://meetinride.ddns.net:3000/login", details, options)
+    this.http.post(this.SERVER_URL + "login", details, options)
       .subscribe(data => {
         callback(null, data);
       }, error => {
@@ -34,7 +36,7 @@ export class ServerProvider {
   }
 
   logout() {
-    this.http.get('http://meetinride.ddns.net:3000/logout').map(res => res.json()).subscribe(data => {
+    this.http.get(this.SERVER_URL + 'logout').map(res => res.json()).subscribe(data => {
       console.log("logout: " + data);
     });
   }
@@ -45,7 +47,7 @@ export class ServerProvider {
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });
 
-    this.http.post("http://meetinride.ddns.net:3000/signup", details, options)
+    this.http.post(this.SERVER_URL + "signup", details, options)
       .subscribe(data => {
         callback(null, data);
       }, error => {
@@ -63,14 +65,14 @@ export class ServerProvider {
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });
 
-    this.http.post("http://meetinride.ddns.net:3000/updatePosition", details, options)
+    this.http.post(this.SERVER_URL + "updatePosition", details, options)
       .subscribe(data => {
         console.log("updatePosition: " + (data['_body']));
       });
   }
 
   getPositions(callback) {
-    this.http.get('http://meetinride.ddns.net:3000/getPositions').map(res => res.json()).subscribe(data => {
+    this.http.get(this.SERVER_URL + 'getPositions').map(res => res.json()).subscribe(data => {
       callback(data);
     });
   }
@@ -85,7 +87,7 @@ export class ServerProvider {
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });
 
-    this.http.post("http://meetinride.ddns.net:3000/addMatch", details, options)
+    this.http.post(this.SERVER_URL + "addMatch", details, options)
       .subscribe(data => {
         console.log("addMatch: " + (data['_body']));
       });
@@ -99,7 +101,7 @@ export class ServerProvider {
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });
 
-    this.http.post("http://meetinride.ddns.net:3000/getMatchsByUsername", details, options)
+    this.http.post(this.SERVER_URL + "getMatchsByUsername", details, options)
       .subscribe(data => {
         callback(data);
       });

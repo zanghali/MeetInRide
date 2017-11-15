@@ -29,8 +29,10 @@ export class LoginPage {
         alert.present();
       }
       else {
-        if (data['_body'] != "[]")
+        if (data['_body'] != ""){
+          localStorage.setItem("token", data['_body']);
           this.navCtrl.setRoot(HomePage, { username: this.username }); // OK
+        }
         else {
           let alert = this.alertCtrl.create({
             title: "Authentication Error",

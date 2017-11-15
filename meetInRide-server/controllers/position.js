@@ -1,11 +1,11 @@
-const { Pool, Client } = require('pg')
-const connectionString = 'postgresql://postgres:cpe@localhost:5432/meetinride'
+const { Pool, Client } = require('pg');
+const config = require('../config/db');
 
 module.exports = {
 
     updatePosition: function (data, callback) {
         const pool = new Pool({
-            connectionString: connectionString,
+            connectionString: config.connectionString,
         })
 
         pool.connect(function (err, client, done) {
@@ -22,7 +22,7 @@ module.exports = {
     
     getPositions: function (data, callback) {
         const pool = new Pool({
-            connectionString: connectionString,
+            connectionString: config.connectionString,
         })
 
         pool.connect(function (err, client, done) {
