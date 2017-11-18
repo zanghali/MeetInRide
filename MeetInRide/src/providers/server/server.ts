@@ -45,7 +45,7 @@ export class ServerProvider {
 
   logout(username) {
     let details = { 'username': username };
-    let options = this.prepareHeaders(false);
+    let options = this.prepareHeaders(true);
 
     this.http.post(this.SERVER_URL + "logout", details, options)
       .subscribe(data => {

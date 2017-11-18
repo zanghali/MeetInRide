@@ -12,7 +12,7 @@ export class MatchsPage {
   matchs: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public server: ServerProvider, public data: DataProvider) {
-    this.server.getMatchsByUsername(data.username, (matchs) => {
+    this.server.getMatchsByUsername(data.user.getUsername(), (matchs) => {
       this.matchs = matchs.json();
     });
   }

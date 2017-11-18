@@ -3,6 +3,7 @@ import { IonicPage, NavController, AlertController } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { ServerProvider } from '../../providers/server/server';
 import { DataProvider } from '../../providers/data/data';
+import { User } from '../../models/user/user';
 
 import { HomePage } from '../home/home';
 import { SignupPage } from '../signup/signup';
@@ -30,9 +31,11 @@ export class LoginPage {
         alert.present();
       }
       else {
-        if (data['_body'] != ""){
-          localStorage.setItem("token", data['_body']);          
-          this.data.username = this.username.toLowerCase();
+        if (data['_body'] != "") {
+          let result = JSON.parse(data['_body'])[0];
+
+          localStorage.setItem("token", result.token);
+          this.data.user = new User(result);
           this.navCtrl.setRoot(HomePage);
         }
         else {

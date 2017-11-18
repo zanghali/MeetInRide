@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
+import { User } from '../../models/user/user';
+
 @Injectable()
 export class DataProvider {
-  public username: string;
+  public user: User;
   public watchPos: any;
   public mapStyle: any;
   public serverUrl: string;

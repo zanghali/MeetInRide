@@ -14,7 +14,6 @@ declare var google;
   templateUrl: 'map.html'
 })
 export class MapPage {
-  public username;
   public watchPos;
   public userMarkers;
   public circle;
@@ -26,10 +25,7 @@ export class MapPage {
   apiKey: any;
 
   constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public connectivityService: ConnectivityServiceProvider, public server: ServerProvider, public data: DataProvider) {
-    this.username = this.data.username;
     this.userMarkers = [];
-
-    this.data.username = this.username;
 
     this.trackPosition();
     this.loadGoogleMaps();
@@ -39,7 +35,7 @@ export class MapPage {
     this.watchPos = Geolocation.watchPosition()
       .filter((p) => p.coords !== undefined)
       .subscribe(position => {
-        this.server.updatePosition(this.username, position.coords.latitude, position.coords.longitude)
+        this.server.updatePosition(this.data.user.getUsername(), position.coords.latitude, position.coords.longitude)
 
         this.server.getPositions((positions) => {
           this.clearPositions();
@@ -49,7 +45,7 @@ export class MapPage {
             var animation;
             var icon;
 
-            if (element.username == this.username) {
+            if (element.username == this.data.user.getUsername()) {
               animation = google.maps.Animation.BOUNCE;
               icon = 'assets/imgs/male.png';
             }
@@ -67,7 +63,7 @@ export class MapPage {
             });
             this.userMarkers.push(marker);
 
-            if (element.username == this.username)
+            if (element.username == this.data.user.getUsername())
               this.circle.setCenter(pos);
             else {
               let that = this;
@@ -75,7 +71,7 @@ export class MapPage {
               google.maps.event.addListener(marker, 'click', function (event) {
                 that.map.setCenter(pos);
 
-                let pageDetails = that.modalCtrl.create(UserModalPage, { username: that.username, matchname: element.username });
+                let pageDetails = that.modalCtrl.create(UserModalPage, { username: that.data.user.getUsername(), matchname: element.username });
                 pageDetails.present();
               });
             }
@@ -139,7 +135,7 @@ export class MapPage {
     Geolocation.getCurrentPosition().then((position) => {
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       var style = this.data.mapStyle;
-      
+
       let mapOptions = {
         center: latLng,
         zoom: 16,

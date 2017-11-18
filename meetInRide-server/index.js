@@ -27,19 +27,19 @@ app.get('/auth', function (request, response) {
 });
 
 app.post('/login', function (request, response) {
-    auth.logUser(request.body, request.headers.authorization, (result) => {
+    auth.login(request.body, request.headers.authorization, (result) => {
         response.send(result);
     })
 });
 
-app.get('/logout', auth.isAuth, function (request, response) {
-    auth.logOut(request.body, (result) => {
+app.post('/logout', auth.isAuth, function (request, response) {
+    auth.logout(request.body, (result) => {
         response.send("destroyed");
     })
 });
 
 app.post('/signup', function (request, response) {
-    auth.registerUser(request.body, (result) => {
+    auth.signup(request.body, (result) => {
         response.send(result);
     })
 });

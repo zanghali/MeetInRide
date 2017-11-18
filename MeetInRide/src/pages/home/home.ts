@@ -14,9 +14,6 @@ export class HomePage {
   tab2Root: any = MapPage;
   tab3Root: any = MatchsPage;
 
-  public mapParam;
-
-  constructor(public navParams: NavParams) {
-    this.mapParam = {username : navParams.get("username")};
+  constructor() {
   }
 }

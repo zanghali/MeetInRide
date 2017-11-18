@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { ServerProvider } from '../providers/server/server';
 import { DataProvider } from '../providers/data/data';
+import { User } from '../models/user/user';
 
 @Component({
   templateUrl: 'app.html'
@@ -22,7 +23,7 @@ export class MyApp {
 
       server.isAuthenticated((data) => {
         if (data != ''){
-          this.data.username = data[0].username;
+          this.data.user = new User(data[0]);
           this.rootPage = HomePage;
         }
         else

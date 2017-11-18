@@ -18,7 +18,7 @@ module.exports = {
         })
 
         pool.connect(function (err, client, done) {
-            let query = "SELECT username FROM users WHERE token = $1";
+            let query = "SELECT * FROM users WHERE token = $1";
             let userdetails = [request.headers.authorization];
 
             client.query(query, userdetails, function (err, res) {
@@ -30,20 +30,20 @@ module.exports = {
         pool.end()
     },
 
-    logUser: function (data, existingToken, callback) {
+    login: function (data, existingToken, callback) {
         const pool = new Pool({
             connectionString: config.connectionString,
         })
 
         pool.connect(function (err, client, done) {
-            let query = "UPDATE users SET token = $3 WHERE username = LOWER($1) AND password = $2";
+            let query = "UPDATE users SET token = $3 WHERE username = LOWER($1) AND password = $2 RETURNING users.*";
             let password = md5(data.password + md5((data.username).toLowerCase()));
             let token = (existingToken == "") ? jwt.sign({ username: data.username }, 'SECRET_MIR_KEY') : existingToken;
             let userdetails = [data.username, password, token];
 
             client.query(query, userdetails, function (err, res) {
-                let result = (res.rowCount == 1) ? token : null;
-
+                let result = (res.rowCount == 1) ? res.rows : null;
+                
                 done();
                 callback(result);
             });
@@ -51,24 +51,26 @@ module.exports = {
         pool.end()
     },
 
-    logOut: function (data, callback) {
+    logout: function (data, callback) {
         const pool = new Pool({
             connectionString: config.connectionString,
         })
 
         pool.connect(function (err, client, done) {
-            let query = "UPDATE users SET token = NULL WHERE username = LOWER($1)";
             let userdetails = [data.username];
-
-            client.query(query, userdetails, function (err, res) {
-                done();
-                callback(true);
+            
+            client.query('BEGIN');
+            client.query("UPDATE users SET token = NULL WHERE username = LOWER($1)", userdetails);
+            client.query("DELETE FROM positions WHERE username = LOWER($1)", userdetails);
+            client.query('COMMIT', function () {
+              done()
+              callback(true);
             });
         })
         pool.end()
     },
 
-    registerUser: function (data, callback) {
+    signup: function (data, callback) {
         const pool = new Pool({
             connectionString: config.connectionString,
         })

@@ -11,12 +11,14 @@ import { LoginPage } from '../login/login';
   templateUrl: 'profile.html',
 })
 export class ProfilePage {
-  public username;
-  public watchPos;
-
+  public name;
+  public age;
+  public description;
+  
   constructor(public app: App, public navCtrl: NavController, public navParams: NavParams, public server: ServerProvider, public data: DataProvider) {
-    this.username = this.data.username;
-    this.watchPos = this.data.watchPos;
+    this.name = data.user.getName();
+    this.age = data.user.getAge().toString();
+    this.description = data.user.getDescription();
   }
 
   ionViewDidLoad() {
@@ -24,8 +26,8 @@ export class ProfilePage {
   }
 
   logout() {
-    this.watchPos.unsubscribe();
-    this.server.logout(this.username);
+    this.data.watchPos.unsubscribe();
+    this.server.logout(this.data.user.getUsername());
     localStorage.clear();
     this.app.getRootNav().setRoot(LoginPage);
   }
