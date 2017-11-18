@@ -13,10 +13,12 @@ export class MatchsPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public server: ServerProvider, public data: DataProvider) {
     this.server.getMatchsByUsername(data.user.getUsername(), (matchs) => {
-      this.matchs = matchs.json();
+      this.data.matchs = matchs.json();
     });
-  }
 
+    this.matchs = this.data.matchs;
+  }
+  
   ionViewDidLoad() {
     console.log('ionViewDidLoad MatchsPage');
   }

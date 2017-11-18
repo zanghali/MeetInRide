@@ -10,6 +10,7 @@ export class DataProvider {
   public watchPos: any;
   public mapStyle: any;
   public serverUrl: string;
+  public matchs: any;
 
   constructor(public http: Http) {
     this.setMapStyle();

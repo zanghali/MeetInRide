@@ -86,13 +86,13 @@ export class ServerProvider {
 
   // Match
 
-  addMatch(first_username, second_username) {
+  addMatch(first_username, second_username, callback) {
     let details = { 'first_username': first_username, 'second_username': second_username };
     let options = this.prepareHeaders(true);
 
     this.http.post(this.SERVER_URL + "addMatch", details, options)
       .subscribe(data => {
-        console.log("addMatch: " + (data['_body']));
+        callback();
       });
   }
 

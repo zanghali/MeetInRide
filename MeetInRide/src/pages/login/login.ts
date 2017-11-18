@@ -32,7 +32,7 @@ export class LoginPage {
       }
       else {
         if (data['_body'] != "") {
-          let result = JSON.parse(data['_body'])[0];
+          let result = (data.json())[0];
 
           localStorage.setItem("token", result.token);
           this.data.user = new User(result);
