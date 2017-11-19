@@ -26,7 +26,7 @@ module.exports = {
         })
 
         pool.connect(function (err, client, done) {
-            let query = "SELECT u.username, p.latitude, p.longitude FROM users u LEFT JOIN positions p ON u.username = p.username";
+            let query = "SELECT u.username, u.surname, u.lastname, u.birthdate, u.email, p.latitude, p.longitude FROM users u LEFT JOIN positions p ON u.username = p.username";
             let userdetails = [/* data.sexe */];
 
             client.query(query, userdetails, function (err, result) {

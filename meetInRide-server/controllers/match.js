@@ -26,7 +26,7 @@ module.exports = {
         })
 
         pool.connect(function (err, client, done) {
-            let query = "SELECT second_username, date FROM matchs WHERE first_username = $1";
+            let query = "SELECT u.username, u.surname, u.lastname, u.birthdate, u.email, m.second_username, m.date FROM matchs m LEFT JOIN users u ON m.second_username = u.username WHERE m.first_username = $1";
             let userdetails = [data.username];
 
             client.query(query, userdetails, function (err, result) {

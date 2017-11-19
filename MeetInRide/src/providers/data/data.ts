@@ -17,6 +17,24 @@ export class DataProvider {
     this.serverUrl = "http://meetinride.ddns.net:3000";
   }
 
+  updateMatchs(matchs, callback) {
+    var object = [];
+
+    matchs.forEach(function (match) {
+      var json = {};
+      var user = new User(match);
+
+      json['name'] = user.getName();
+      json['age'] = user.getAge().toString() + ' y.o';
+      json['date'] = (new Date (match.date.replace(' ', 'T'))).toLocaleDateString();
+
+      object.push(json);
+    });
+
+    this.matchs = object;
+    callback();
+  }
+  
   setMapStyle() {
     this.mapStyle = [
       {

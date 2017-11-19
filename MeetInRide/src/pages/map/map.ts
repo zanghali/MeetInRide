@@ -4,6 +4,7 @@ import { ConnectivityServiceProvider } from '../../providers/connectivity-servic
 import { Geolocation } from 'ionic-native';
 import { ServerProvider } from '../../providers/server/server';
 import { DataProvider } from '../../providers/data/data';
+import { User } from '../../models/user/user';
 
 import { UserModalPage } from '../user-modal/user-modal';
 
@@ -68,7 +69,7 @@ export class MapPage {
               google.maps.event.addListener(marker, 'click', function (event) {
                 that.map.setCenter(pos);
 
-                let pageDetails = that.modalCtrl.create(UserModalPage, { username: that.data.user.getUsername(), matchname: element.username });
+                let pageDetails = that.modalCtrl.create(UserModalPage, { matchedUser: new User(element) });
                 pageDetails.present();
               });
             }

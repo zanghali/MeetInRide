@@ -13,12 +13,10 @@ import { LoginPage } from '../login/login';
 export class ProfilePage {
   public name;
   public age;
-  public description;
   
   constructor(public app: App, public navCtrl: NavController, public navParams: NavParams, public server: ServerProvider, public data: DataProvider) {
     this.name = data.user.getName();
-    this.age = data.user.getAge().toString();
-    this.description = data.user.getDescription();
+    this.age = data.user.getAge().toString() + ' y.o';
   }
 
   ionViewDidLoad() {
