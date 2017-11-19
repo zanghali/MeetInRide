@@ -10,6 +10,9 @@ import { User } from '../../models/user/user';
 })  
 export class UserModalPage {
   matchedUser: User = this.navParams.get('matchedUser');
+  latitude: any = this.navParams.get('latitude');
+  longitude: any = this.navParams.get('longitude');
+
   public name;
   public age;
 
@@ -23,7 +26,7 @@ export class UserModalPage {
   }
 
   match() {
-    this.server.addMatch(this.data.user.getUsername(), this.matchedUser.getUsername(), () => {
+    this.server.addMatch(this.data.user.getUsername(), this.matchedUser.getUsername(), this.latitude, this.longitude, () => {
       this.closeModal();
     });
   }

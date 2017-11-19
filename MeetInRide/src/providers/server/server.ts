@@ -86,14 +86,19 @@ export class ServerProvider {
 
   // Match
 
-  addMatch(first_username, second_username, callback) {
-    let details = { 'first_username': first_username, 'second_username': second_username };
+  addMatch(first_username, second_username, latitude, longitude, callback) {
+    let details = { 'first_username': first_username, 'second_username': second_username, 'latitude': latitude, 'longitude': longitude };
     let options = this.prepareHeaders(true);
 
     this.http.post(this.SERVER_URL + "addMatch", details, options)
-      .subscribe(data => {
-        callback();
-      });
+      .subscribe(
+        data => {
+          callback();
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   getMatchsByUsername(username, callback) {

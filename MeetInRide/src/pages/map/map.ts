@@ -63,13 +63,13 @@ export class MapPage {
 
             if (element.username == this.data.user.getUsername())
               this.circle.setCenter(pos);
-            else {
+            else if ((this.circle.getBounds()).contains(pos)) {
               let that = this;
 
               google.maps.event.addListener(marker, 'click', function (event) {
                 that.map.setCenter(pos);
 
-                let pageDetails = that.modalCtrl.create(UserModalPage, { matchedUser: new User(element) });
+                let pageDetails = that.modalCtrl.create(UserModalPage, { matchedUser: new User(element), latitude: element.latitude, longitude: element.longitude });
                 pageDetails.present();
               });
             }

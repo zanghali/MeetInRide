@@ -7,6 +7,12 @@
 <ion-content>
   <ion-list>
     <ion-card *ngFor="let match of matchs">
+      <img src="{{'https://maps.googleapis.com/maps/api/staticmap?center=' + match.latitude + ',' + match.longitude + '&zoom=16&size=640x400&path=weight:3%7Ccolor:blue%7Cenc:{coaHnetiVjM??_SkM??~R'}}">
+      <ion-fab right top>
+        <button ion-fab>
+          <ion-icon name="pin"></ion-icon>
+        </button>
+      </ion-fab>
       <ion-item>
         <ion-avatar item-start>
           <img src="assets/imgs/avatar.png">

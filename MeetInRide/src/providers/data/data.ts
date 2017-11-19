@@ -27,6 +27,8 @@ export class DataProvider {
       json['name'] = user.getName();
       json['age'] = user.getAge().toString() + ' y.o';
       json['date'] = (new Date (match.date.replace(' ', 'T'))).toLocaleDateString();
+      json['latitude'] = match.latitude;
+      json['longitude'] = match.longitude;
 
       object.push(json);
     });
